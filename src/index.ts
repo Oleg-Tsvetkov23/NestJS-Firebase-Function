@@ -24,13 +24,11 @@ export const api = functions.region('europe-west1')
 
 
 export const moderator = functions.firestore.document('books/{booksID}').onWrite((change) => {
-  functions.logger.info("Trigger");
   const mes = change.after.data();
-//  const mes = change.after.data();
-//    console.log("mes",mes.description);
-//    functions.logger.info("---------->");
-  functions.logger.log('Hallo', mes); 
-//    return null;
+  if (mes.description === undefined || mes.description.length === 0) {
+    const moderateMessage = 'Скоро здесь будет описание…'
+    return change.after.ref.update({description : moderateMessage});
+  }
   return null;
 })
 
